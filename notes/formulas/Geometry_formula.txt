@@ -1,0 +1,297 @@
+# CP GEOMETRY FORMULA HANDBOOK
+
+A compact, competition‑oriented, 80/20 geometry formula reference.
+Focus: essential formulas, when to use, definitions, and intuition.
+
+===============================================================
+
+## 1. BASIC VECTOR FORMULAS
+
+===============================================================
+
+### **Dot Product**
+
+**Formula:** `a·b = |a||b|cosθ`
+**Use cases:**
+
+* Find angle between vectors
+* Projection length
+* Check if angle is obtuse/acute
+
+### **Cross Product (2D)**
+
+**Formula:** `a×b = |a||b|sinθ`
+**Use cases:**
+
+* Orientation test (left/right turn)
+* Area of parallelogram/triangle
+* Segment intersection logic
+
+### **Distance**
+
+**Formula:** `dist = sqrt((x1-x2)^2 + (y1-y2)^2)`
+**Use cases:**
+
+* Closest pair, geometry comparisons
+* Circle radius, triangle sides
+
+### **Projection Length of b onto a**
+
+`proj = (a·b)/|a|`
+
+===============================================================
+
+## 2. AREA FORMULAS
+
+===============================================================
+
+### **Triangle area (using coordinates)**
+
+`Area = |cross(b-a, c-a)| / 2`
+Use: Any triangle in plane.
+
+### **Triangle area (Heron)**
+
+`s = (a + b + c)/2`
+`Area = sqrt(s(s-a)(s-b)(s-c))`
+Use: Only side lengths known.
+
+### **Polygon area (Shoelace)**
+
+`A = 1/2 * |Σ(x_i*y_{i+1} - y_i*x_{i+1})|`
+Use: Generic polygon.
+
+### **Parallelogram area**
+
+`Area = |a×b|`
+
+### **Trapezoid area**
+
+`Area = (h * (b1 + b2))/2`
+
+===============================================================
+
+## 3. CENTERS OF TRIANGLES
+
+===============================================================
+
+### **Centroid (Center of Mass)**
+
+Coordinates:
+`X = (x1 + x2 + x3)/3`
+`Y = (y1 + y2 + y3)/3`
+Use: Mass center, median intersection, always inside triangle.
+
+### **Circumcenter (Circle through all 3 vertices)**
+
+Definition: Intersection of perpendicular bisectors.
+Formula (coordinate form):
+
+* Solve two perpendicular bisector equations OR
+* Use determinant formula (not included here for simplicity)
+
+Use cases:
+
+* Find circumscribed circle radius
+* Geometry involving perpendicularity
+
+Radius:
+`R = a / (2 sin A)`
+Also:
+`R = abc / (4 * Area)`
+
+### **Incenter (Inscribed circle center)**
+
+Definition: Intersection of angle bisectors.
+Coordinates:
+`X = (ax1 + bx2 + cx3) / (a + b + c)`  (weights = side opposite each vertex)
+`Y = (ay1 + by2 + cy3) / (a + b + c)`
+
+Use:
+
+* Find incircle radius
+* Tangency problems
+
+Incircle radius:
+`r = Area / s`
+
+### **Orthocenter (Intersection of altitudes)**
+
+Definition: Point where all altitudes meet.
+Use cases:
+
+* Rare in CP except in advanced problems
+* Might be used in reflection/rotation geometry
+
+### **Excenter (External center of a triangle)**
+
+Definition: Angle bisectors of two outer angles + one inner.
+Use:
+
+* Excircle radius
+* Triangle decomposition
+
+Exradius:
+`r_a = Area / (s - a)`
+
+===============================================================
+
+## 4. CIRCLES
+
+===============================================================
+
+### **Equation of circle**
+
+`(x - h)^2 + (y - k)^2 = r^2`
+
+### **Area of circular segment**
+
+`A = r^2/2 * (θ - sinθ)`
+Use: Arcs, intersections.
+
+### **Distance from point to line**
+
+`d = |Ax + By + C| / sqrt(A^2 + B^2)`
+Use: Tangency, closest point, projections.
+
+### **Line-circle intersection conditions**
+
+* **d > r** → no intersection
+* **d = r** → tangent
+* **d < r** → two intersections
+
+===============================================================
+
+## 5. LINES & ANGLES
+
+===============================================================
+
+### **Slope formula**
+
+`m = (y2-y1)/(x2-x1)`
+Use: Parallelism, perpendicularity.
+
+### **Perpendicular slope**
+
+If `m1 * m2 = -1`, lines are perpendicular.
+
+### **Angle between lines**
+
+`tan θ = |(m1 - m2)/(1 + m1*m2)|`
+
+### **Distance from point to segment**
+
+Use projection formula + check if projection lies inside segment.
+
+===============================================================
+
+## 6.lti IMPORTANT TRIANGLE RELATIONS
+
+===============================================================
+
+### **Law of Cosines**
+
+`c^2 = a^2 + b^2 - 2ab cos C`
+Use: Find angles/sides in any triangle.
+
+### **Law of Sines**
+
+`a / sin A = b / sin B = c / sin C = 2R`
+Use: Circumradius, unknown sides.
+
+### **Euler Line**
+
+Points: Centroid, Circumcenter, Orthocenter are collinear.
+Use: Theory‑heavy, rarely required in CP.
+
+### **Nine‑point circle**
+
+Contains midpoints, feet of altitudes.
+Use: Almost never needed in CP, but good to know.
+
+===============================================================
+
+## 7. POLYGONS
+
+===============================================================
+
+### **Regular n-gon area**
+
+`A = n * r^2 * sin(2π/n) / 2`  (r = radius of circumscribed circle)
+
+### **Interior angle of regular n‑gon**
+
+`θ = (n−2)*180° / n`
+
+### **Sum of interior angles**
+
+`S = (n−2)*180°`
+
+### **Circumradius of regular n‑gon**
+
+`R = s / (2 sin(π/n))`  (s = side length)
+
+===============================================================
+
+## 8. COMMON CP GEOMETRY USE CASES
+
+===============================================================
+
+### **1. Checking turn direction**
+
+Use: Cross product sign.
+
+### **2. Segment intersection**
+
+Use: Orientation + on‑segment.
+
+### **3. Convex hull**
+
+Use: Sorting + turn tests.
+
+### **4. Polygon area**
+
+Use: Shoelace.
+
+### **5. Closest point on line**
+
+Use: Projection formulas.
+
+### **6. Min enclosing circle**
+
+Use: Distance + perpendicular bisectors.
+
+### **7. Circle‑circle intersection**
+
+Use: Two‑point intersection formula (not included here).
+
+===============================================================
+
+## 9. QUICK DECISION RULES (80/20)
+
+===============================================================
+
+### **Need area?**
+
+* Triangle → cross/Heron
+* Polygon → shoelace
+
+### **Need angle?**
+
+* Vectors → dot product
+* Sides only → law of cosines
+
+### **Need orientation?**
+
+* Cross sign
+
+### **Checking if shape is convex?**
+
+* Cross direction must not change
+
+### **Need center of a triangle?**
+
+* Equal weights → centroid
+* Opposite‑side weights → incenter
+* Perp bisectors → circumcenter
+* Altitudes → orthocenter

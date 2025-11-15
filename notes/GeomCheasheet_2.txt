@@ -1,0 +1,264 @@
+// =========================================
+// 📘 Computational Geometry Master Sheet
+// Suitable for Competitive Programming (CP)
+// =========================================
+// Author: Sakib
+// Complexity annotations, explanations, and examples included.
+// No headers used; add your own #includes as needed.
+// =========================================
+
+// -------------------------
+// 🧩 Helper Structures
+// -------------------------
+struct Point {
+    double x, y;
+    bool operator<(const Point& p) const {
+        return x < p.x || (x == p.x && y < p.y);
+    }
+};
+
+// -------------------------
+// 🧮 Basic Vector Operations
+// -------------------------
+
+double cross(const Point& a, const Point& b, const Point& c) {
+    // Cross product (b - a) × (c - a)
+    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+}
+
+double dot(const Point& a, const Point& b, const Point& c) {
+    // Dot product (b - a) • (c - a)
+    return (b.x - a.x) * (c.x - a.x) + (b.y - a.y) * (c.y - a.y);
+}
+
+double dist2(const Point& a, const Point& b) {
+    // Squared distance between two points
+    double dx = a.x - b.x, dy = a.y - b.y;
+    return dx * dx + dy * dy;
+}
+
+// ===================================================
+// 🧭 1. Convex Hull (Monotone Chain)
+// ===================================================
+// Complexity: O(n log n)
+// Use Case: Smallest convex polygon enclosing all points.
+// Foundation for many geometry problems.
+
+vector<Point> convexHull(vector<Point>& pts) {
+    int n = pts.size(), k = 0;
+    if (n <= 1) return pts;
+    sort(pts.begin(), pts.end());
+
+    vector<Point> hull(2 * n);
+
+    // Lower hull
+    for (int i = 0; i < n; ++i) {
+        while (k >= 2 && cross(hull[k - 2], hull[k - 1], pts[i]) <= 0) k--;
+        hull[k++] = pts[i];
+    }
+
+    // Upper hull
+    for (int i = n - 2, t = k + 1; i >= 0; --i) {
+        while (k >= t && cross(hull[k - 2], hull[k - 1], pts[i]) <= 0) k--;
+        hull[k++] = pts[i];
+    }
+
+    hull.resize(k - 1);
+    return hull;
+}
+
+// Example Usage:
+// vector<Point> pts = {{0,0}, {1,1}, {2,2}, {2,0}, {1,2}, {0,2}};
+// auto hull = convexHull(pts);
+// for (auto& p : hull) cout << p.x << ", " << p.y << endl;
+
+// ===================================================
+// 🔁 2. Rotating Calipers
+// ===================================================
+// Use: Find farthest pair of points (diameter) or min area rectangle.
+// Complexity: O(n)
+
+double rotatingCalipersDiameter(const vector<Point>& hull) {
+    int n = hull.size();
+    if (n == 1) return 0.0;
+    if (n == 2) return sqrt(dist2(hull[0], hull[1]));
+
+    double maxDist = 0;
+    int j = 1;
+    for (int i = 0; i < n; ++i) {
+        while (fabs(cross(hull[i], hull[(i + 1) % n], hull[(j + 1) % n])) > fabs(cross(hull[i], hull[(i + 1) % n], hull[j]))) {
+            j = (j + 1) % n;
+        }
+        maxDist = max(maxDist, sqrt(dist2(hull[i], hull[j])));
+    }
+    return maxDist;
+}
+
+// ===================================================
+// 📏 3. Closest Pair of Points
+// ===================================================
+// Divide and Conquer: O(n log n)
+// Returns minimal distance between any two points.
+
+double closestPair(vector<Point>& pts) {
+    sort(pts.begin(), pts.end(), [](const Point& a, const Point& b){ return a.x < b.x; });
+
+    function<double(int,int)> solve = [&](int l, int r) {
+        if (r - l <= 3) {
+            double d = 1e18;
+            for (int i = l; i < r; ++i)
+                for (int j = i + 1; j < r; ++j)
+                    d = min(d, sqrt(dist2(pts[i], pts[j])));
+            sort(pts.begin() + l, pts.begin() + r, [](const Point& a, const Point& b){ return a.y < b.y; });
+            return d;
+        }
+        int m = (l + r) / 2;
+        double midx = pts[m].x;
+        double d = min(solve(l, m), solve(m, r));
+
+        inplace_merge(pts.begin() + l, pts.begin() + m, pts.begin() + r, [](const Point& a, const Point& b){ return a.y < b.y; });
+        vector<Point> strip;
+        for (int i = l; i < r; ++i) if (fabs(pts[i].x - midx) < d) strip.push_back(pts[i]);
+        for (int i = 0; i < (int)strip.size(); ++i)
+            for (int j = i + 1; j < (int)strip.size() && (strip[j].y - strip[i].y) < d; ++j)
+                d = min(d, sqrt(dist2(strip[i], strip[j])));
+        return d;
+    };
+    return solve(0, pts.size());
+}
+
+// ===================================================
+// ⚪ 4. Circle Intersection
+// ===================================================
+// Finds intersection points of two circles.
+
+vector<Point> circleIntersection(Point c1, double r1, Point c2, double r2) {
+    vector<Point> res;
+    double d2 = dist2(c1, c2);
+    double d = sqrt(d2);
+    if (d > r1 + r2 || d < fabs(r1 - r2) || d == 0) return res; // no intersection
+
+    double a = (r1*r1 - r2*r2 + d2) / (2*d);
+    double h = sqrt(max(0.0, r1*r1 - a*a));
+    Point p = { c1.x + a*(c2.x - c1.x)/d, c1.y + a*(c2.y - c1.y)/d };
+
+    res.push_back({ p.x + h*(c2.y - c1.y)/d, p.y - h*(c2.x - c1.x)/d });
+    res.push_back({ p.x - h*(c2.y - c1.y)/d, p.y + h*(c2.x - c1.x)/d });
+    return res;
+}
+
+// ===================================================
+// 🌀 5. Point Inside Polygon
+// ===================================================
+// Ray Casting Method - O(n)
+// Returns true if point lies inside or on polygon boundary.
+
+bool pointInPolygon(const vector<Point>& poly, Point p) {
+    bool inside = false;
+    int n = poly.size();
+    for (int i = 0, j = n - 1; i < n; j = i++) {
+        if (((poly[i].y > p.y) != (poly[j].y > p.y)) &&
+            (p.x < (poly[j].x - poly[i].x) * (p.y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x))
+            inside = !inside;
+    }
+    return inside;
+}
+
+// ===================================================
+// 🔘 6. Minimum Enclosing Circle (Welzl's Algorithm)
+// ===================================================
+// Expected O(n)
+// Smallest circle enclosing all points.
+
+struct Circle {
+    Point c; double r;
+};
+
+double dist(const Point& a, const Point& b) { return sqrt(dist2(a, b)); }
+
+Circle circleFrom(const Point& A, const Point& B, const Point& C) {
+    double bx = B.x - A.x, by = B.y - A.y;
+    double cx = C.x - A.x, cy = C.y - A.y;
+    double B2 = bx*bx + by*by, C2 = cx*cx + cy*cy;
+    double D = 2 * (bx*cy - by*cx);
+    Point O = { A.x + (cy*B2 - by*C2)/D, A.y + (bx*C2 - cx*B2)/D };
+    return { O, dist(O, A) };
+}
+
+Circle circleFrom(const Point& A, const Point& B) {
+    Point c = { (A.x + B.x)/2, (A.y + B.y)/2 };
+    return { c, dist(A, B)/2 };
+}
+
+Circle welzl(vector<Point>& P, vector<Point> R, int n) {
+    if (n == 0 || R.size() == 3) {
+        if (R.empty()) return { {0,0}, 0 };
+        else if (R.size() == 1) return { R[0], 0 };
+        else if (R.size() == 2) return circleFrom(R[0], R[1]);
+        else return circleFrom(R[0], R[1], R[2]);
+    }
+    Point p = P[n - 1];
+    Circle D = welzl(P, R, n - 1);
+    if (dist(p, D.c) <= D.r) return D;
+    R.push_back(p);
+    return welzl(P, R, n - 1);
+}
+
+Circle minimumEnclosingCircle(vector<Point> P) {
+    random_shuffle(P.begin(), P.end());
+    return welzl(P, {}, P.size());
+}
+
+// ===================================================
+// ➿ 7. Line Sweep - Segment Intersection Detection
+// ===================================================
+// Detect if any two segments intersect using sweep line.
+
+struct Segment { Point p1, p2; };
+
+double orientation(Point a, Point b, Point c) {
+    double val = cross(a, b, c);
+    if (val == 0) return 0;
+    return (val > 0) ? 1 : 2;
+}
+
+bool onSegment(Point p, Point q, Point r) {
+    return q.x <= max(p.x, r.x) && q.x >= min(p.x, r.x) &&
+           q.y <= max(p.y, r.y) && q.y >= min(p.y, r.y);
+}
+
+bool segmentsIntersect(Point p1, Point q1, Point p2, Point q2) {
+    double o1 = orientation(p1, q1, p2);
+    double o2 = orientation(p1, q1, q2);
+    double o3 = orientation(p2, q2, p1);
+    double o4 = orientation(p2, q2, q1);
+
+    if (o1 != o2 && o3 != o4) return true;
+    if (o1 == 0 && onSegment(p1, p2, q1)) return true;
+    if (o2 == 0 && onSegment(p1, q2, q1)) return true;
+    if (o3 == 0 && onSegment(p2, p1, q2)) return true;
+    if (o4 == 0 && onSegment(p2, q1, q2)) return true;
+    return false;
+}
+
+// ===================================================
+// 🧠 8. Geometry + Binary Search
+// ===================================================
+// Common in optimization problems like minimal distance, radius, or area.
+
+// Template for binary search in geometric optimization
+// Example: find minimal distance between two shapes where predicate() checks feasibility.
+
+double binarySearchGeometry(double lo, double hi, function<bool(double)> predicate, int iter=100) {
+    for (int i = 0; i < iter; ++i) {
+        double mid = (lo + hi) / 2.0;
+        if (predicate(mid)) hi = mid; else lo = mid;
+    }
+    return hi;
+}
+
+// Example usage: optimize distance threshold, minimal radius, etc.
+
+// ===================================================
+// ✅ End of Geometry Toolkit
+// ===================================================

@@ -1,0 +1,177 @@
+🧭 COMPETITIVE PROGRAMMING GEOMETRY CHEAT SHEET
+───────────────────────────────────────────────
+
+I. BASIC GEOMETRIC PRIMITIVES
+──────────────────────────────
+⿡ Distance
+Between 2 points: d = √((x1 - x2)² + (y1 - y2)²)
+From point (x0, y0) to line ax + by + c = 0: d = |a*x0 + b*y0 + c| / √(a² + b²)
+
+⿢ Vectors
+Vector AB = (x2 - x1, y2 - y1)
+Dot: A·B = x1x2 + y1y2 = |A||B|cosθ
+Cross: A×B = x1y2 - y1x2 = |A||B|sinθ
+Sign: >0 → CCW, <0 → CW, =0 → Collinear
+
+Usecase: Cross → orientation, area | Dot → angle, projection
+
+───────────────────────────────────────────────
+
+II. TRIANGLES
+──────────────
+Sides: a,b,c  |  Semi-perimeter: s = (a+b+c)/2
+
+Area (Heron): A = √(s(s-a)(s-b)(s-c))
+Area (coord): A = ½|x1(y2−y3) + x2(y3−y1) + x3(y1−y2)|
+Circumradius: R = (a*b*c) / (4*A)
+Inradius: r = A / s
+Median to side a: ma = ½√(2b² + 2c² − a²)
+Centroid: G = ((x1+x2+x3)/3, (y1+y2+y3)/3)
+
+USECASE:
+- Centroid → intersection of medians (center of mass)
+- Incenter → intersection of angle bisectors (circle inside)
+- Circumcenter → intersection of perpendicular bisectors (circle outside)
+- Orthocenter → intersection of altitudes
+- Euler Line: passes through centroid, circumcenter, orthocenter
+
+───────────────────────────────────────────────
+
+III. CIRCLES
+─────────────
+Standard form: (x−h)² + (y−k)² = r²
+General form: x² + y² + 2gx + 2fy + c = 0
+→ center = (−g, −f), r = √(g² + f² − c)
+Tangent at (x1, y1): x*x1 + y*y1 = r²
+Tangent length: l = √(x1² + y1² − r²)
+
+Power of point: PT² = PO² − r²
+
+───────────────────────────────────────────────
+
+IV. LINES
+──────────
+Two-point form: (y−y1) = (y2−y1)/(x2−x1)*(x−x1)
+Slope-intercept: y = m*x + c
+General: ax + by + c = 0
+Intersection of two lines:
+x = (b1*c2 − b2*c1) / (a1*b2 − a2*b1)
+y = (c1*a2 − c2*a1) / (a1*b2 − a2*b1)
+
+Point-line distance: |a*x + b*y + c| / √(a² + b²)
+Parallel check: a1*b2 == a2*b1
+
+───────────────────────────────────────────────
+
+V. POLYGONS
+────────────
+Area (Shoelace): A = ½|Σ(xi*yi+1 − xi+1*yi)|
+Centroid: Cx = (1/(6A))Σ(xi+xi+1)(xi*yi+1 − xi+1*yi)
+         Cy = (1/(6A))Σ(yi+yi+1)(xi*yi+1 − xi+1*yi)
+Point inside polygon: ray-casting (odd ⇒ inside)
+Convex check: all cross products same sign
+
+───────────────────────────────────────────────
+
+VI. ROTATION & REFLECTION
+──────────────────────────
+Rotate (x,y) by θ: 
+x' = x*cosθ − y*sinθ
+y' = x*sinθ + y*cosθ
+Rotate about (cx,cy):
+x' = cx + (x−cx)*cosθ − (y−cy)*sinθ
+y' = cy + (x−cx)*sinθ + (y−cy)*cosθ
+
+Reflections:
+x-axis → (x, −y)
+y-axis → (−x, y)
+y = x → (y, x)
+
+───────────────────────────────────────────────
+
+VII. ORIENTATION & INTERSECTION
+────────────────────────────────
+Cross(A,B,C) = (B−A)×(C−A)
+→ >0 CCW, <0 CW, =0 collinear
+
+Segments AB & CD intersect if:
+orient(A,B,C) ≠ orient(A,B,D) and orient(C,D,A) ≠ orient(C,D,B)
+
+───────────────────────────────────────────────
+
+VIII. TRIGONOMETRY ESSENTIALS
+─────────────────────────────
+Degrees ↔ Radians: rad = deg * π/180, deg = rad * 180/π
+
+🔹 Basic Identities:
+sin²θ + cos²θ = 1
+1 + tan²θ = sec²θ
+1 + cot²θ = csc²θ
+sin(2θ) = 2sinθcosθ
+cos(2θ) = cos²θ − sin²θ = 2cos²θ − 1 = 1 − 2sin²θ
+tan(2θ) = 2tanθ / (1 − tan²θ)
+sin(A±B) = sinAcosB ± cosAsinB
+cos(A±B) = cosAcosB ∓ sinAsinB
+tan(A±B) = (tanA ± tanB)/(1 ∓ tanA*tanB)
+
+Inverse:
+asin(x), acos(x), atan(x), atan2(y,x) → find θ
+
+───────────────────────────────────────────────
+
+IX. GEOMETRY AREA & LENGTH FORMULAS
+────────────────────────────────────
+• Triangle: A = ½ab sinC
+• Rectangle: A = l*b
+• Parallelogram: A = b*h = ab sinθ
+• Trapezium: A = ½(a+b)*h
+• Circle: A = πr², Circumf = 2πr
+• Sector: A = (θ/360)*πr²
+• Segment: A = r²(θ − sinθ)/2 (θ in radians)
+• Ellipse: A = πab
+• Regular n-gon: A = (n*r²*sin(2π/n))/2
+• Annulus: A = π(R² − r²)
+
+───────────────────────────────────────────────
+
+X. VECTOR USECASES
+────────────────────
+1. Check perpendicular: A·B = 0
+2. Check parallel: A×B = 0
+3. Find angle: θ = acos((A·B)/(|A||B|))
+4. Area of triangle: |A×B|/2
+5. Projection of P on AB: 
+   t = ((P−A)·(B−A)) / |B−A|²
+   proj = A + t*(B−A)
+6. Distance from point to segment: clamp t∈[0,1]
+7. Area of quadrilateral: split into triangles
+
+───────────────────────────────────────────────
+
+XI. ADVANCED CP TEMPLATES
+──────────────────────────
+Convex Hull: sort points, build upper+lower hull via cross test.
+Rotating Calipers: max distance or min area from convex hull.
+Closest Pair of Points: divide & conquer O(n log n)
+Circle Intersection: geometry + algebra (quadratic)
+Sweep Line: event sorting (intersections, visibility)
+Voronoi / Delaunay: dual of convex hull
+
+───────────────────────────────────────────────
+
+XII. CONSTANTS & EPSILON
+────────────────────────
+const double EPS = 1e-9;
+if (fabs(a - b) < EPS) // treat as equal
+Use long double for precise geometry.
+
+───────────────────────────────────────────────
+
+XIII. QUICK FORM RECALL
+────────────────────────
+Law of Sines: a/sinA = b/sinB = c/sinC = 2R
+Law of Cosines: c² = a² + b² − 2ab cosC
+Sum of Angles in n-gon: (n−2)*180°
+Regular polygon exterior angle: 360°/n
+
+───────────────────────────────────────────────

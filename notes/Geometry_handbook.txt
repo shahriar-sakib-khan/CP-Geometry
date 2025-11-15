@@ -1,0 +1,253 @@
+# CP Geometry Cheatsheet (80/20 Edition)
+
+A fast, no-nonsense handbook on **when to use what**, **core formulas**, and **classical problem patterns**.
+
+## 1. Orientation Test (Cross Sign)
+
+**What it does:** Determines turn direction and relative orientation of points.
+
+**Use When:**
+
+* Checking if two segments intersect.
+* Determining point position relative to a line.
+* Sorting points angularly (convex hull, sweepline).
+
+**Key Insight:**
+
+* `cross(b - a, c - a)` > 0 ⇒ C lies to the left of AB.
+* Absolute value gives parallelogram area.
+
+**Classic Problems:**
+
+* "Is this point inside triangle?" → Use three orientation signs.
+* "Shelter line" problems → Check if all points lie on same side.
+
+**Dry Logic:**
+
+* Compute cross.
+* Inspect sign.
+* Decide relative geometry.
+
+## 2. Dot Product (Projection Logic)
+
+**What it does:** Measures alignment of two vectors.
+
+**Use When:**
+
+* Checking if angle is acute/obtuse.
+* Projection length onto another vector.
+* Checking if point lies within segment bounds.
+
+**Key Insight:**
+
+* dot(a, b) > 0 ⇒ acute.
+* dot(a, b) = 0 ⇒ perpendicular.
+* dot(a, b) < 0 ⇒ obtuse.
+
+**Classic Problems:**
+
+* Distance from point to segment.
+* Foot of perpendicular onto a line.
+
+**Dry Logic:**
+
+* Compute projection scalar.
+* Clamp to segment ends if needed.
+
+## 3. Cross Product (Area + Rotation)
+
+**What it does:** Measures 2D area and rotation direction.
+
+**Use When:**
+
+* Computing polygon area.
+* Determining convexity.
+* Angular sorting.
+
+**Key Insight:**
+
+* Area of triangle = |cross| / 2.
+
+**Classic Problems:**
+
+* Shoelace formula tasks.
+* Rotating calipers tasks → area, width, diameter.
+
+## 4. Segment Intersection
+
+**What it does:** Checks if two line segments touch.
+
+**Use When:**
+
+* Geometry sweepline.
+* Polygon self-intersection.
+* Checking validity of polygon edges.
+
+**Core Logic:**
+
+1. Orient tests for general case.
+2. Handle collinear + on-segment check.
+
+**Classic Problems:**
+
+* Detect if polygon is simple.
+* "Will two paths collide?"
+
+## 5. Convex Hull
+
+**What it does:** Computes the smallest enclosing convex polygon.
+
+**Use When:**
+
+* Computing diameter (rotating calipers).
+* Minkowski sum of convex polygons.
+* Outlier detection.
+
+**Key Insight:**
+
+* Monotonic chain is O(n log n) and stable.
+* Cross sign decides keeping/discarding points.
+
+**Classic Problems:**
+
+* Maximum distance between two points.
+* Largest triangle inside a point set.
+
+## 6. Polygon Area (Shoelace)
+
+**What it does:** Gives the area of any simple polygon.
+
+**Use When:**
+
+* Union/intersection of polygons.
+* Determining orientation of polygon.
+* Checking convexity implicitly.
+
+**Key Insight:**
+
+* Signed area > 0 ⇒ CCW
+* Use abs() / 2 for true area.
+
+**Classic Problems:**
+
+* Land measurement problems.
+* Given path coordinates → compute area.
+
+## 7. Point in Polygon (Ray Casting / Winding)
+
+**What it does:** Determines if point lies inside/outside/on-edge.
+
+**Use When:**
+
+* Simulation boundaries.
+* Query geometry.
+
+**80/20 Use:** Ray casting is enough for CP.
+
+**Classic Problems:**
+
+* "Is query point inside region?"
+
+## 8. Distance Formulas
+
+**You MUST know these:**
+
+* Point → point
+* Point → line
+* Point → segment
+* Segment → segment
+
+**Use When:**
+
+* Collision detection.
+* Nearest pair problems.
+* Optimization with geometry.
+
+**Classic Problems:**
+
+* "Minimum distance between two moving objects" (static snapshot first).
+
+## 9. Rectangle / Circle Essentials
+
+**Circle:**
+
+* Distance from center ≤ radius → inside.
+* Tangency when distance = radius.
+
+**Rectangle:**
+
+* Axis-aligned → clamp coordinates.
+* Rotated → transform and reduce to AABB logic.
+
+**Classic Problems:**
+
+* Circle-line intersection.
+
+## 10. Common Problem Patterns
+
+### ● Convex Hull + Calipers
+
+* Diameter of set.
+* Width of set.
+* Maximum area triangle.
+
+### ● Cross Sign Chains
+
+* Detect concave point.
+* Check if polygon is convex.
+
+### ● Dot + Cross Combo
+
+* Foot of perpendicular.
+* Closest distance.
+
+### ● Orientation + On-segment
+
+* Full intersection engine.
+
+### ● Shoelace
+
+* Area.
+* Polygon orientation.
+
+### ● Sweepline
+
+* Segment intersection.
+* Closest pair.
+
+## 11. What to Use When (80/20 Flow)
+
+* **Check turn / convexity / orientation:** cross sign.
+* **Check if point lies on segment:** collinear + dot sign bounds.
+* **Check intersection:** two orientation pairs + collinear check.
+* **Compute area:** shoelace (cross sum).
+* **Check containing:** ray cast.
+* **Project onto something:** dot.
+* **Decide hull structure:** cross.
+* **Maximum distance:** hull + calipers.
+
+## 12. Quick Heuristics (The "Smell Test")
+
+* If it smells like rotation or turning → **cross**.
+* If it smells like projection or angle → **dot**.
+* If it smells like area → **shoelace/cross**.
+* If it smells like intersection → **orientation + on-segment**.
+* If it smells like nearest something → **dot + clamping**.
+* If it smells like envelope/boundary → **convex hull**.
+
+## 13. Minimal Classical Problems to Master
+
+1. **Given 3 points, is it clockwise?**
+2. **Segment intersection (with collinear cases).**
+3. **Convex hull with Andrew algorithm.**
+4. **Polygon area from coordinates.**
+5. **Point in polygon.**
+6. **Distance from point to segment.**
+7. **Diameter using rotating calipers.**
+8. **Min distance between two segments.**
+9. **Check if polygon is convex.**
+10. **Simplest circle-line intersection questions.**
+
+---
+
+This cheatsheet is intentionally dense but covers the 20% concepts solving 80% geometry problems in CP.
